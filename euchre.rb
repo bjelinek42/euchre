@@ -7,6 +7,10 @@ class Euchre
     @computer2 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @computer3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @flip_card = {}
+    @player_order = ["human", "computer1", "computer2", "computer3"]
+    @dealer_position = 1
+    @score = {"team1" => 0, "team2" => 0}
+    @bidding_team = ""
   end
 
   def full_deal
@@ -20,9 +24,36 @@ class Euchre
     p @computer2
     p @computer3
     p @flip_card
+    bid
+  end
 
-    
-  
+  def bid
+    if @dealer_position > 4 #cycle through indexes of player order, not to exceed the 4th position
+      @dealer_position = 1
+    end
+    position = @dealer_position #mold position for rounds without changing dealer position
+    puts "The flipped card is: #{@flip_card}"
+    while true
+      if position == 1
+        puts "Your Hand: Spades: #{@human["spades"]}, Clubs: #{@human["clubs"]}, Hearts: #{@human["hearts"]}, Diamonds: #{@human["diamonds"]}"
+        puts "Would you like to Order it up? y or n"
+        answer = gets.chomp.downcase
+        if answer == "y"
+          @bidding_team = "team1"
+          break
+        end
+      elsif position == 2
+        player = @computer1
+      elsif position == 3
+        player = @computer2
+      elsif position == 4
+        player = @computer3
+      end
+    end
+  end
+
+  def convert_bowers
+
   end
 
   def player_deal

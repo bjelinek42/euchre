@@ -10,6 +10,7 @@ class Euchre
     @dealer_position = 1
     @score = {"team1" => 0, "team2" => 0}
     @bidding_team = ""
+    @trump = ""
   end
 
   def full_deal
@@ -51,11 +52,39 @@ class Euchre
       end
       count += 1
     end
+    if order_it_up == false
+      count = 0
+      while count < 4
+        if position == 1
+          player = @player1
+          trump_called = call_trump(position, player)
+        elsif position == 2
+          player = @player2
+          trump_called = call_trump(position, player)
+        elsif position == 3
+          player = @player3
+          trump_called = call_trump(position, player)
+        elsif position == 4
+          player = @player4
+          trump_called = call_trump(position, player)
+        end
+        position += 1
+        if position == 5
+          position = 1
+        end
+        count += 1
+        if trump_called == true
+          break
+        end
+      end
+    end
+    p @trump
   end
 
   def player_bid(position, player)
     puts "Player #{position}, it is your turn."
     puts "Your Hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+    order_it_up = false
     while true
       puts "Would you like to Order it up? y or n"
       answer = gets.chomp.downcase
@@ -65,7 +94,7 @@ class Euchre
         else
           @bidding_team = "team2"
         end
-        return true
+        order_it_up = true
         break
       elsif answer == "n"
         break
@@ -73,10 +102,26 @@ class Euchre
         puts "please enter a valid response"
       end
     end
+    return order_it_up
   end
 
-  def call_trump
-
+  def call_trump(position, player)
+    call_trump = false
+    puts "Your Hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+    while true
+      puts "Player #{position}, would you like to call trump? Please select spades, clubs, hearts, diamonds, or pass."
+      answer = gets.chomp.downcase
+      if answer == "spades" || answer == "clubs" || answer == "hearts" || answer == "diamonds"
+        @trump = answer
+        call_trump = true
+        break
+      elsif answer == "pass"
+        break
+      else
+        puts "Please enter a valid response"
+      end
+    end
+    return call_trump
   end
 
   def convert_bowers

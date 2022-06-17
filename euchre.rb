@@ -2,28 +2,22 @@ class Euchre
 
   def initialize
     @deck = {"spades" => ["Ace", "King", "Queen", "Jack", "10", "9"], "clubs" => ["Ace", "King", "Queen", "Jack", "10", "9"], "hearts" => ["Ace", "King", "Queen", "Jack", "10", "9"], "diamonds" => ["Ace", "King", "Queen", "Jack", "10", "9"]}
-    @human = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
-    @computer1 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
-    @computer2 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
-    @computer3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
+    @player1 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
+    @player2 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
+    @player3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
+    @player4 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @flip_card = {}
-    @player_order = ["human", "computer1", "computer2", "computer3"]
     @dealer_position = 1
     @score = {"team1" => 0, "team2" => 0}
     @bidding_team = ""
   end
 
   def full_deal
-    @human = player_deal
-    @computer1 = player_deal
-    @computer2 = player_deal
-    @computer3 = player_deal
+    @player1 = player_deal
+    @player2 = player_deal
+    @player3 = player_deal
+    @player4 = player_deal
     trump
-    p @human
-    p @computer1
-    p @computer2
-    p @computer3
-    p @flip_card
     bid
   end
 
@@ -33,21 +27,70 @@ class Euchre
     end
     position = @dealer_position #mold position for rounds without changing dealer position
     puts "The flipped card is: #{@flip_card}"
-    while true
-      if position == 1
-        puts "Your Hand: Spades: #{@human["spades"]}, Clubs: #{@human["clubs"]}, Hearts: #{@human["hearts"]}, Diamonds: #{@human["diamonds"]}"
-        puts "Would you like to Order it up? y or n"
-        answer = gets.chomp.downcase
-        if answer == "y"
-          @bidding_team = "team1"
-          break
+    # count = 0
+    # while count < 4
+      while true
+        if position == 1
+          player = @player1
+          order_it_up = player_bid(position, player)
+          if order_it_up == true
+            break
+          end
+          # puts "Player 1, it is your turn."
+          # puts "Your Hand: Spades: #{@player1["spades"]}, Clubs: #{@player1["clubs"]}, Hearts: #{@player1["hearts"]}, Diamonds: #{@player1["diamonds"]}"
+          # puts "Would you like to Order it up? y or n"
+          # answer = gets.chomp.downcase
+          # if answer == "y"
+          #   @bidding_team = "team1"
+          #   p @bidding_team
+          #   break
+          # end
+        elsif position == 2
+          player = @player2
+          order_it_up = player_bid(position, player)
+          if order_it_up == true
+            break
+          end
+        elsif position == 3
+          player = @player3
+          order_it_up = player_bid(position, player)
+          if order_it_up == true
+            break
+          end
+        elsif position == 4
+          player = @player4
+          order_it_up = player_bid(position, player)
+          if order_it_up == true
+            break
+          end
         end
-      elsif position == 2
-        player = @computer1
-      elsif position == 3
-        player = @computer2
-      elsif position == 4
-        player = @computer3
+      # end
+      # count += 1
+      position += 1
+      if position == 5
+        position = 1
+      end
+    end
+  end
+
+  def player_bid(position, player)
+    puts "Player #{position}, it is your turn."
+    puts "Your Hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+    while true
+      puts "Would you like to Order it up? y or n"
+      answer = gets.chomp.downcase
+      if answer == "y"
+        if position == 1 || position == 3
+          @bidding_team = "team1"
+        else
+          @bidding_team = "team2"
+        end
+        return true
+        break
+      elsif answer == "n"
+        break
+      else
+        puts "please enter a valid response"
       end
     end
   end

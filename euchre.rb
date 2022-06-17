@@ -48,6 +48,7 @@ class Euchre
         position = 1
       end
       if order_it_up == true
+        @trump = @flip_card.keys[0]
         break
       end
       count += 1

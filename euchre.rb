@@ -11,8 +11,13 @@ class Euchre
 
   def deal
     suits = ["spades", "clubs", "hearts", "diamonds"]
-    4.times do
-      suit = suits.sample
+    24.times do
+      while true #prevents taking from suits with no cards left
+        suit = suits.sample
+        if @deck[suit] != []
+          break
+        end
+      end
       value = @deck[suit].sample
       @human[suit] << value #puts card in hand
       @deck[suit].delete(value) # removes from deck

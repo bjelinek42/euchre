@@ -27,49 +27,29 @@ class Euchre
     end
     position = @dealer_position #mold position for rounds without changing dealer position
     puts "The flipped card is: #{@flip_card}"
-    # count = 0
-    # while count < 4
-      while true
-        if position == 1
-          player = @player1
-          order_it_up = player_bid(position, player)
-          if order_it_up == true
-            break
-          end
-          # puts "Player 1, it is your turn."
-          # puts "Your Hand: Spades: #{@player1["spades"]}, Clubs: #{@player1["clubs"]}, Hearts: #{@player1["hearts"]}, Diamonds: #{@player1["diamonds"]}"
-          # puts "Would you like to Order it up? y or n"
-          # answer = gets.chomp.downcase
-          # if answer == "y"
-          #   @bidding_team = "team1"
-          #   p @bidding_team
-          #   break
-          # end
-        elsif position == 2
-          player = @player2
-          order_it_up = player_bid(position, player)
-          if order_it_up == true
-            break
-          end
-        elsif position == 3
-          player = @player3
-          order_it_up = player_bid(position, player)
-          if order_it_up == true
-            break
-          end
-        elsif position == 4
-          player = @player4
-          order_it_up = player_bid(position, player)
-          if order_it_up == true
-            break
-          end
-        end
-      # end
-      # count += 1
+    count = 0
+    while count < 4
+      if position == 1
+        player = @player1
+        order_it_up = player_bid(position, player)
+      elsif position == 2
+        player = @player2
+        order_it_up = player_bid(position, player)
+      elsif position == 3
+        player = @player3
+        order_it_up = player_bid(position, player)
+      elsif position == 4
+        player = @player4
+        order_it_up = player_bid(position, player)
+      end
       position += 1
       if position == 5
         position = 1
       end
+      if order_it_up == true
+        break
+      end
+      count += 1
     end
   end
 
@@ -93,6 +73,10 @@ class Euchre
         puts "please enter a valid response"
       end
     end
+  end
+
+  def call_trump
+
   end
 
   def convert_bowers

@@ -11,6 +11,8 @@ class Euchre
     @score = {"team1" => 0, "team2" => 0}
     @bidding_team = ""
     @trump = ""
+    puts "Welcome to Euchre! Please hit enter to start the game and deal out hands."
+    gets
   end
 
   def full_deal
@@ -20,6 +22,12 @@ class Euchre
     @player4 = player_deal
     trump
     bid
+    convert_bowers
+    p @trump
+    p @player1
+    p @player2
+    p @player3
+    p @player4
   end
 
   def bid
@@ -126,7 +134,29 @@ class Euchre
   end
 
   def convert_bowers
-
+    p 1
+    if @trump == "spades"
+      p 2
+      @player1["spades"].each do |spade|
+        p spade
+        if spade == "Jack"
+          @player1["spades"].delete("Jack")
+          @player1["spades"] << "Right_Bower"
+          p spade
+        end
+      end
+      @player1["clubs"].each do |club|
+        p 3
+        p club
+        if club == "Jack"
+          @player1["clubs"].delete("Jack")
+          @player1["spades"] << "Left_Bower"
+        end
+      end
+    elsif @trump == "clubs"
+    elsif @trump == "hearts"
+    elsif @trump == "diamonds"
+    end
   end
 
   def player_deal

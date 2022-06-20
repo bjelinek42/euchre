@@ -145,62 +145,80 @@ class Euchre
     elsif @trump == "diamonds"
       off_jack = "hearts"
     end
-    @player1[@trump].each do |card|
-      if card == "Jack"
-        @player1[@trump].delete("Jack")
-        @player1[@trump] << "Right_Bower"
-      end
-    end
-    @player1[off_jack].each do |card|
-      if card == "Jack"
-        @player1[off_jack].delete("Jack")
-        @player1[@trump] << "Left_Bower"
-      end
-    end
-    @player2[@trump].each do |card|
-      if card == "Jack"
-        @player2[@trump].delete("Jack")
-        @player2[@trump] << "Right_Bower"
-      end
-    end
-    @player2[off_jack].each do |card|
-      if card == "Jack"
-        @player2[off_jack].delete("Jack")
-        @player2[@trump] << "Left_Bower"
-      end
-    end
-    @player3[@trump].each do |card|
-      if card == "Jack"
-        @player3[@trump].delete("Jack")
-        @player3[@trump] << "Right_Bower"
-      end
-    end
-    @player3[off_jack].each do |card|
-      if card == "Jack"
-        @player3[off_jack].delete("Jack")
-        @player3[@trump] << "Left_Bower"
-      end
-    end
-    @player4[@trump].each do |card|
-      if card == "Jack"
-        @player4[@trump].delete("Jack")
-        @player4[@trump] << "Right_Bower"
-      end
-    end
-    @player4[off_jack].each do |card|
-      if card == "Jack"
-        @player4[off_jack].delete("Jack")
-        @player4[@trump] << "Left_Bower"
+    right_bower_converstion
+    left_bower_conversion(off_jack)
+    # @player1[@trump].each do |card|
+    #   if card == "Jack"
+    #     @player1[@trump].delete("Jack")
+    #     @player1[@trump] << "Right_Bower"
+    #   end
+    # end
+    # @player1[off_jack].each do |card|
+    #   if card == "Jack"
+    #     @player1[off_jack].delete("Jack")
+    #     @player1[@trump] << "Left_Bower"
+    #   end
+    # end
+    # @player2[@trump].each do |card|
+    #   if card == "Jack"
+    #     @player2[@trump].delete("Jack")
+    #     @player2[@trump] << "Right_Bower"
+    #   end
+    # end
+    # @player2[off_jack].each do |card|
+    #   if card == "Jack"
+    #     @player2[off_jack].delete("Jack")
+    #     @player2[@trump] << "Left_Bower"
+    #   end
+    # end
+    # @player3[@trump].each do |card|
+    #   if card == "Jack"
+    #     @player3[@trump].delete("Jack")
+    #     @player3[@trump] << "Right_Bower"
+    #   end
+    # end
+    # @player3[off_jack].each do |card|
+    #   if card == "Jack"
+    #     @player3[off_jack].delete("Jack")
+    #     @player3[@trump] << "Left_Bower"
+    #   end
+    # end
+    # @player4[@trump].each do |card|
+    #   if card == "Jack"
+    #     @player4[@trump].delete("Jack")
+    #     @player4[@trump] << "Right_Bower"
+    #   end
+    # end
+    # @player4[off_jack].each do |card|
+    #   if card == "Jack"
+    #     @player4[off_jack].delete("Jack")
+    #     @player4[@trump] << "Left_Bower"
+    #   end
+    # end
+  end
+
+  def right_bower_converstion 
+    players = [@player1, @player2, @player3, @player4]
+    players.each do |player|
+      player[@trump].each do |card|
+        if card == "Jack"
+          player[@trump].delete("Jack")
+          player[@trump] << "Right_Bower"
+        end
       end
     end
   end
 
-  def right_bower_converstion
-
-  end
-
-  def left_bower_conversion
-
+  def left_bower_conversion(off_jack)
+    players = [@player1, @player2, @player3, @player4]
+    players.each do |player|
+      player[off_jack].each do |card|
+        if card == "Jack"
+          player[off_jack].delete("Jack")
+          player[@trump] << "Left_Bower"
+        end
+      end
+    end
   end
 
   def player_deal

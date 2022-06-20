@@ -7,6 +7,7 @@ class Euchre
     @player3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @player4 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @player_order = []
+    @text_player_order = []
     @flip_card = {}
     @dealer_position = 0
     @score = {"team1" => 0, "team2" => 0}
@@ -41,7 +42,7 @@ class Euchre
     @player_order.each_with_index do |player, index|
       if index == 0
         while true
-          puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
+          puts "#{@text_player_order[index]}, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
           puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
           suit = gets.chomp.downcase
           if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
@@ -76,7 +77,7 @@ class Euchre
         if player[led_suit] != []
           suit = led_suit
           while true
-            puts "Player X, You have the following #{suit}. Type the value of the card you wish to play."
+            puts "#{@text_player_order[index]}, You have the following #{suit}. Type the value of the card you wish to play."
             puts "Card values = #{player[suit]}"
             value = gets.chomp.to_s.downcase.capitalize
             exist = false
@@ -93,10 +94,10 @@ class Euchre
             end
           end
         else
-          puts "Player X, you do not have the led suit. You can play any other card"
+          puts "#{@text_player_order[index]}, you do not have the led suit. You can play any other card"
           puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
           while true
-            puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
+            puts "#{@text_player_order[index]}, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
             suit = gets.chomp.downcase
             if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
               puts "Please choose a valid suit."
@@ -198,24 +199,50 @@ class Euchre
   def initial_player_order
     if @dealer_position == 0
       @player_order = [@player2, @player3, @player4, @player1]
+      @text_player_order = ["Player 2", "Player 3", "Player 4", "Player 1"]
     elsif @dealer_position == 1
       @player_order = [@player3, @player4, @player1, @player2]
+      @text_player_order = ["Player 3", "Player 4", "Player 1", "Player 2"]
     elsif @dealer_position == 2
       @player_order = [@player4, @player1, @player2, @player3]
+      @text_player_order = ["Player 4", "Player 1", "Player 2", "Player 3"]
     elsif @dealer_position == 3
       @player_order = [@player1, @player2, @player3, @player4]
+      @text_player_order = ["Player 1", "Player 2", "Player 3", "Player 4"]
     end
   end
 
   def subsequent_player_order(winner_index)
     if winner_index == 1
-      @player_order << @player_order.shift
+      shift = @player_order.shift
+      shift.each do |player|
+        @player_order << player
+      end
+      shift = @text_player_order.shift
+      shift.each do |player|
+        @text_player_order << player
+      end
     elsif winner_index == 2
-      @player_order << @player_order.shift(2)
+      shift = @player_order.shift(2)
+      shift.each do |player|
+        @player_order << player
+      end
+      shift = @text_player_order.shift(2)
+      shift.each do |player|
+        @text_player_order << player
+      end
     elsif winner_index == 3
-      @player_order << @player_order.shift(3)
+      shift = @player_order.shift(3)
+      shift.each do |player|
+        @player_order << player
+      end
+      shift = @text_player_order.shift(3)
+      shift.each do |player|
+        @text_player_order << player
+      end
     end
     p @player_order
+    p @text_player_order
   end
 
   def bid

@@ -134,9 +134,24 @@ class Euchre
       played_cards_order << played
       p played_cards_order
     end
+    hand_winner(played_cards_order, led_suit)
   end
 
-  def hand_winner
+  def hand_winner(played_cards_order, led_suit)
+    trump_cards = []
+    p 1
+    played_cards_order.each_with_index do |card, index|
+      p 2
+      if card.keys[0] == @trump
+        p card
+        p 3
+        trump_cards[index] = card
+        p 4
+      else
+        trump_cards[index] = nil
+      end
+      p trump_cards
+    end
 
   end
 

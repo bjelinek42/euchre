@@ -7,7 +7,7 @@ class Euchre
     @player3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @player4 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @flip_card = {}
-    @dealer_position = 1
+    @dealer_position = 0
     @score = {"team1" => 0, "team2" => 0}
     @bidding_team = ""
     @trump = ""
@@ -20,9 +20,10 @@ class Euchre
     @player2 = player_deal
     @player3 = player_deal
     @player4 = player_deal
-    trump
-    bid
-    convert_bowers
+    puts "Player #{@dealer_position + 1}, you are dealer."
+    trump()
+    bid()
+    convert_bowers()
     p @trump
     p @player1
     p @player2
@@ -31,10 +32,10 @@ class Euchre
   end
 
   def bid
-    if @dealer_position > 4 #cycle through indexes of player order, not to exceed the 4th position
-      @dealer_position = 1
+    if @dealer_position > 3 #cycle through indexes of player order, not to exceed the 4th position
+      @dealer_position = 0
     end
-    position = @dealer_position #mold position for rounds without changing dealer position
+    position = @dealer_position + 2 #hold position for rounds without changing dealer position
     puts "The flipped card is: #{@flip_card}"
     count = 0
     while count < 4
@@ -55,8 +56,42 @@ class Euchre
       if position == 5
         position = 1
       end
-      if order_it_up == true
+      if order_it_up == true #dealer picks up @flipped_card, and chooses to discard a card
+        players = [@player1, @player2, @player3, @player4]
         @trump = @flip_card.keys[0]
+        dealer = players[@dealer_position]
+        puts "Player #{@dealer_position + 1}, you have picked up #{@flip_card}. Please choose a card to discard."
+        puts "Your Hand: Spades: #{dealer["spades"]}, Clubs: #{dealer["clubs"]}, Hearts: #{dealer["hearts"]}, Diamonds: #{dealer["diamonds"]}"
+        while true
+          puts "Choose the suit of the card you would like to discard (spades, clubs, hearts, diamonds)"
+          suit = gets.chomp.downcase
+          p suit
+          if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
+            puts "Please choose a valid suit."
+          elsif players[@dealer_position][suit].length == 0
+            puts "You have no #{suit} to discard. Please enter a different response."
+          elsif players[@dealer_position][suit].length > 0
+            break
+          end
+        end
+        puts "Suit options to discard: #{dealer[suit]}"
+        while true
+          puts "Type the value of the card you wish to discard."
+          value = gets.chomp.to_s.downcase.capitalize
+          exist = false
+          players[@dealer_position][suit].each do |card|
+            if card == value
+              exist = true
+            end
+          end
+          if exist == false
+            puts "You do not have a card with that value. Please choose valid value."
+          else
+            break
+          end
+        end
+        players[@dealer_position][suit].delete(value)
+        players[@dealer_position][@trump] << @flip_card[@trump]
         break
       end
       count += 1
@@ -145,56 +180,8 @@ class Euchre
     elsif @trump == "diamonds"
       off_jack = "hearts"
     end
-    right_bower_converstion
+    right_bower_converstion()
     left_bower_conversion(off_jack)
-    # @player1[@trump].each do |card|
-    #   if card == "Jack"
-    #     @player1[@trump].delete("Jack")
-    #     @player1[@trump] << "Right_Bower"
-    #   end
-    # end
-    # @player1[off_jack].each do |card|
-    #   if card == "Jack"
-    #     @player1[off_jack].delete("Jack")
-    #     @player1[@trump] << "Left_Bower"
-    #   end
-    # end
-    # @player2[@trump].each do |card|
-    #   if card == "Jack"
-    #     @player2[@trump].delete("Jack")
-    #     @player2[@trump] << "Right_Bower"
-    #   end
-    # end
-    # @player2[off_jack].each do |card|
-    #   if card == "Jack"
-    #     @player2[off_jack].delete("Jack")
-    #     @player2[@trump] << "Left_Bower"
-    #   end
-    # end
-    # @player3[@trump].each do |card|
-    #   if card == "Jack"
-    #     @player3[@trump].delete("Jack")
-    #     @player3[@trump] << "Right_Bower"
-    #   end
-    # end
-    # @player3[off_jack].each do |card|
-    #   if card == "Jack"
-    #     @player3[off_jack].delete("Jack")
-    #     @player3[@trump] << "Left_Bower"
-    #   end
-    # end
-    # @player4[@trump].each do |card|
-    #   if card == "Jack"
-    #     @player4[@trump].delete("Jack")
-    #     @player4[@trump] << "Right_Bower"
-    #   end
-    # end
-    # @player4[off_jack].each do |card|
-    #   if card == "Jack"
-    #     @player4[off_jack].delete("Jack")
-    #     @player4[@trump] << "Left_Bower"
-    #   end
-    # end
   end
 
   def right_bower_converstion 

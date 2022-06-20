@@ -22,7 +22,7 @@ class Euchre
     @player3 = player_deal
     @player4 = player_deal
     puts "Player #{@dealer_position + 1}, you are dealer."
-    player_order()
+    initial_player_order()
     show_flipped_card()
     bid()
     convert_bowers()
@@ -132,30 +132,50 @@ class Euchre
       played = {}
       played[suit] = value 
       played_cards_order << played
-      p played_cards_order
     end
     hand_winner(played_cards_order, led_suit)
   end
 
   def hand_winner(played_cards_order, led_suit)
     trump_cards = []
-    p 1
     played_cards_order.each_with_index do |card, index|
-      p 2
       if card.keys[0] == @trump
-        p card
-        p 3
         trump_cards[index] = card
-        p 4
       else
         trump_cards[index] = nil
       end
       p trump_cards
     end
-
+    if trump_cards != [nil, nil, nil, nil]
+      trump_winner(trump_cards, played_cards_order)
+    end
   end
 
-  def player_order
+  def trump_winner(trump_cards, played_cards_order)
+    trump_cards.each_with_index do |card, index|
+      if card == nil
+        trump_cards[index] = 0
+      elsif card[@trump] == "Right_bower"
+        trump_cards[index] = 7
+      elsif card[@trump] == "Left_bower"
+        trump_cards[index] = 6
+      elsif card[@trump] =="Ace"
+        trump_cards[index] = 5
+      elsif card[@trump] == "King"
+        trump_cards[index] = 4
+      elsif card[@trump] == "Queen"
+        trump_cards[index] = 3
+      elsif card[@trump] == "10"
+        trump_cards[index] = 2
+      elsif card[@trump] == "9"
+        trump_cards[index] = 1
+      end
+    end
+    winner_index = trump_cards.index(trump_cards.max)
+    subsequent_player_order(winner_index)
+  end
+
+  def initial_player_order
     if @dealer_position == 0
       @player_order = [@player2, @player3, @player4, @player1]
     elsif @dealer_position == 1
@@ -165,6 +185,17 @@ class Euchre
     elsif @dealer_position == 3
       @player_order = [@player1, @player2, @player3, @player4]
     end
+  end
+
+  def subsequent_player_order(winner_index)
+    if winner_index == 1
+      @player_order << @player_order.shift
+    elsif winner_index == 2
+      @player_order << @player_order.shift(2)
+    elsif winner_index == 3
+      @player_order << @player_order.shift(3)
+    end
+    p @player_order
   end
 
   def bid

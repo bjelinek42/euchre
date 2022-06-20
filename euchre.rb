@@ -98,6 +98,7 @@ class Euchre
     end
     if order_it_up == false
       count = 0
+      trump_called = false
       while count < 4
         if position == 1
           player = @player1
@@ -112,13 +113,22 @@ class Euchre
           player = @player4
           trump_called = call_trump(position, player)
         end
+        if trump_called == true
+          break
+        end
+        count += 1
+        if count == 4 && trump_called == false
+          while true
+            puts "Sorry, Player #{position}, you are last and must call trump!"
+            trump_called = call_trump(position, player)
+            if trump_called == true
+              break
+            end
+          end
+        end
         position += 1
         if position == 5
           position = 1
-        end
-        count += 1
-        if trump_called == true
-          break
         end
       end
     end
@@ -169,8 +179,6 @@ class Euchre
   end
 
   def convert_bowers
-    black = ["spades", "clubs"]
-    red = ["hearts", "diamonds"]
     if @trump == "spades"
       off_jack = "clubs"
     elsif @trump == "clubs"

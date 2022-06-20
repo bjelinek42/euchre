@@ -137,41 +137,61 @@ class Euchre
   end
 
   def hand_winner(played_cards_order, led_suit)
-    trump_cards = []
+    cards = []
     played_cards_order.each_with_index do |card, index|
       if card.keys[0] == @trump
-        trump_cards[index] = card
+        cards[index] = card
       else
-        trump_cards[index] = nil
+        cards[index] = nil
       end
-      p trump_cards
+      p cards
     end
-    if trump_cards != [nil, nil, nil, nil]
-      trump_winner(trump_cards, played_cards_order)
+    if cards != [nil, nil, nil, nil]
+      trump = true
+      winner(cards, played_cards_order)
+    else
+      trump = false
+      cards = []
+      played_cards_order.each_with_index do |card, index|
+        if card.keys[0] == led_suit
+          cards[index] = card
+        else
+          cards[index] = nil
+        end
+        p cards
+      end
+      winner(cards, played_cards_order, trump, led_suit)
     end
   end
 
-  def trump_winner(trump_cards, played_cards_order)
-    trump_cards.each_with_index do |card, index|
+  def winner(cards, played_cards_order, trump, led_suit)
+    if trump == true
+      suit = @trump
+    else
+      suit = led_suit
+    end
+    cards.each_with_index do |card, index|
       if card == nil
-        trump_cards[index] = 0
-      elsif card[@trump] == "Right_bower"
-        trump_cards[index] = 7
-      elsif card[@trump] == "Left_bower"
-        trump_cards[index] = 6
-      elsif card[@trump] =="Ace"
-        trump_cards[index] = 5
-      elsif card[@trump] == "King"
-        trump_cards[index] = 4
-      elsif card[@trump] == "Queen"
-        trump_cards[index] = 3
-      elsif card[@trump] == "10"
-        trump_cards[index] = 2
-      elsif card[@trump] == "9"
-        trump_cards[index] = 1
+        cards[index] = 0
+      elsif card[suit] == "Right_bower"
+        cards[index] = 8
+      elsif card[suit] == "Left_bower"
+        cards[index] = 7
+      elsif card[suit] =="Ace"
+        cards[index] = 6
+      elsif card[suit] == "King"
+        cards[index] = 5
+      elsif card[suit] == "Queen"
+        cards[index] = 4
+      elsif card[suit] == "Jack"
+        cards[index] = 3
+      elsif card[suit] == "10"
+        cards[index] = 2
+      elsif card[suit] == "9"
+        cards[index] = 1
       end
     end
-    winner_index = trump_cards.index(trump_cards.max)
+    winner_index = cards.index(cards.max)
     subsequent_player_order(winner_index)
   end
 

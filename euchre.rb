@@ -6,6 +6,7 @@ class Euchre
     @player2 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @player3 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     @player4 = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
+    @player_order = []
     @flip_card = {}
     @dealer_position = 0
     @score = {"team1" => 0, "team2" => 0}
@@ -21,7 +22,8 @@ class Euchre
     @player3 = player_deal
     @player4 = player_deal
     puts "Player #{@dealer_position + 1}, you are dealer."
-    trump()
+    player_order()
+    show_flipped_card()
     bid()
     convert_bowers()
     p @trump
@@ -29,6 +31,66 @@ class Euchre
     p @player2
     p @player3
     p @player4
+    play_rounds()
+  end
+
+  def play_rounds
+    played_cards = {}
+    led_suit = ""
+    @player_order.each_with_index do |player, index|
+      while true
+        if index != 0
+          puts "The led suit is #{led_suit}"
+          puts "The current played cards are #{played_cards}."
+        end
+        puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
+        puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+        suit = gets.chomp.downcase
+        if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
+          puts "Please choose a valid suit."
+        elsif player[suit].length == 0
+          puts "You have no #{suit} to play. Please enter a different suit."
+        elsif player[suit].length > 0
+          break
+        end
+      end
+      exist = false
+      puts "Suit options to play: #{player[suit]}"
+      while true
+        puts "Type the value of the card you wish to play."
+        value = gets.chomp.to_s.downcase.capitalize
+        exist = false
+        player[suit].each do |card|
+          if card == value
+            exist = true
+          end
+        end
+        if exist == false
+          puts "You do not have a card with that value. Please choose valid value."
+        else
+          break
+        end
+      end
+      if index == 0
+        led_suit = suit
+      end
+      if played_cards[suit] == nil
+        played_cards[suit] = []
+      end
+      played_cards[suit] << value
+    end
+  end
+
+  def player_order
+    if @dealer_position == 0
+      @player_order = [@player2, @player3, @player4, @player1]
+    elsif @dealer_position == 1
+      @player_order = [@player3, @player4, @player1, @player2]
+    elsif @dealer_position == 2
+      @player_order = [@player4, @player1, @player2, @player3]
+    elsif @dealer_position == 3
+      @player_order = [@player1, @player2, @player3, @player4]
+    end
   end
 
   def bid
@@ -200,7 +262,7 @@ class Euchre
       player[@trump].each do |card|
         if card == "Jack"
           player[@trump].delete("Jack")
-          player[@trump] << "Right_Bower"
+          player[@trump] << "Right_bower"
         end
       end
     end
@@ -212,7 +274,7 @@ class Euchre
       player[off_jack].each do |card|
         if card == "Jack"
           player[off_jack].delete("Jack")
-          player[@trump] << "Left_Bower"
+          player[@trump] << "Left_bower"
         end
       end
     end
@@ -235,7 +297,7 @@ class Euchre
     return hand
   end
 
-  def trump
+  def show_flipped_card
     suits = ["spades", "clubs", "hearts", "diamonds"]
     while true #prevents taking from suits with no cards left
       suit = suits.sample

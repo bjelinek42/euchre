@@ -162,10 +162,12 @@ class Euchre
   def call_trump(position, player)
     call_trump = false
     puts "Your Hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+    possible_suits = ["spades", "clubs", "hearts", "diamonds"]
+    possible_suits.delete(@flip_card.keys[0])
     while true
-      puts "Player #{position}, would you like to call trump? Please select spades, clubs, hearts, diamonds, or pass."
+      puts "Player #{position}, would you like to call trump? Please select #{possible_suits[0]}, #{possible_suits[1]}, #{possible_suits[2]}, or pass."
       answer = gets.chomp.downcase
-      if answer == "spades" || answer == "clubs" || answer == "hearts" || answer == "diamonds"
+      if answer == possible_suits[0] || answer == possible_suits[1] || answer == possible_suits[2]
         @trump = answer
         call_trump = true
         break

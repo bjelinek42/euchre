@@ -76,8 +76,40 @@ class Euchre
         if player[led_suit] != []
           suit = led_suit
           while true
-            puts "Type the value of the card you wish to play."
+            puts "Player X, You have the following #{suit}. Type the value of the card you wish to play."
             puts "Card values = #{player[suit]}"
+            value = gets.chomp.to_s.downcase.capitalize
+            exist = false
+            player[suit].each do |card|
+              if card == value
+                exist = true
+              end
+            end
+            if exist == false
+              puts "You do not have a card with that value. Please choose valid value."
+              
+            else
+              break
+            end
+          end
+        else
+          puts "Player X, you do not have the led suit. You can play any other card"
+          puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+          while true
+            puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
+            suit = gets.chomp.downcase
+            if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
+              puts "Please choose a valid suit."
+            elsif player[suit].length == 0
+              puts "You have no #{suit} to play. Please enter a different suit."
+            elsif player[suit].length > 0
+              break
+            end
+          end
+          exist = false
+          puts "Suit options to play: #{player[suit]}"
+          while true
+            puts "Type the value of the card you wish to play."
             value = gets.chomp.to_s.downcase.capitalize
             exist = false
             player[suit].each do |card|

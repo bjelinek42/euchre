@@ -36,49 +36,76 @@ class Euchre
 
   def play_rounds
     played_cards = {}
+    played_cards_order = []
     led_suit = ""
     @player_order.each_with_index do |player, index|
-      while true
-        if index != 0
-          puts "The led suit is #{led_suit}"
-          puts "The current played cards are #{played_cards}."
-        end
-        puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
-        puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
-        suit = gets.chomp.downcase
-        if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
-          puts "Please choose a valid suit."
-        elsif player[suit].length == 0
-          puts "You have no #{suit} to play. Please enter a different suit."
-        elsif player[suit].length > 0
-          break
-        end
-      end
-      exist = false
-      puts "Suit options to play: #{player[suit]}"
-      while true
-        puts "Type the value of the card you wish to play."
-        value = gets.chomp.to_s.downcase.capitalize
-        exist = false
-        player[suit].each do |card|
-          if card == value
-            exist = true
+      if index == 0
+        while true
+          puts "Player X, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
+          puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
+          suit = gets.chomp.downcase
+          if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
+            puts "Please choose a valid suit."
+          elsif player[suit].length == 0
+            puts "You have no #{suit} to play. Please enter a different suit."
+          elsif player[suit].length > 0
+            break
           end
         end
-        if exist == false
-          puts "You do not have a card with that value. Please choose valid value."
-        else
-          break
+        exist = false
+        puts "Suit options to play: #{player[suit]}"
+        while true
+          puts "Type the value of the card you wish to play."
+          value = gets.chomp.to_s.downcase.capitalize
+          exist = false
+          player[suit].each do |card|
+            if card == value
+              exist = true
+            end
+          end
+          if exist == false
+            puts "You do not have a card with that value. Please choose valid value."
+          else
+            break
+          end
         end
-      end
-      if index == 0
         led_suit = suit
+      else
+        puts "Currently played cards: #{played_cards}."
+        puts "Led suit = #{led_suit}"
+        if player[led_suit] != []
+          suit = led_suit
+          while true
+            puts "Type the value of the card you wish to play."
+            puts "Card values = #{player[suit]}"
+            value = gets.chomp.to_s.downcase.capitalize
+            exist = false
+            player[suit].each do |card|
+              if card == value
+                exist = true
+              end
+            end
+            if exist == false
+              puts "You do not have a card with that value. Please choose valid value."
+            else
+              break
+            end
+          end
+        end
       end
       if played_cards[suit] == nil
         played_cards[suit] = []
       end
       played_cards[suit] << value
+      played = {}
+      played[suit] = value 
+      played_cards_order << played
+      p played_cards_order
     end
+  end
+
+  def hand_winner
+
   end
 
   def player_order

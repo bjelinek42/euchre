@@ -134,29 +134,73 @@ class Euchre
   end
 
   def convert_bowers
-    p 1
+    black = ["spades", "clubs"]
+    red = ["hearts", "diamonds"]
     if @trump == "spades"
-      p 2
-      @player1["spades"].each do |spade|
-        p spade
-        if spade == "Jack"
-          @player1["spades"].delete("Jack")
-          @player1["spades"] << "Right_Bower"
-          p spade
-        end
-      end
-      @player1["clubs"].each do |club|
-        p 3
-        p club
-        if club == "Jack"
-          @player1["clubs"].delete("Jack")
-          @player1["spades"] << "Left_Bower"
-        end
-      end
+      off_jack = "clubs"
     elsif @trump == "clubs"
+      off_jack = "spades"
     elsif @trump == "hearts"
+      off_jack = "diamonds"
     elsif @trump == "diamonds"
+      off_jack = "hearts"
     end
+    @player1[@trump].each do |card|
+      if card == "Jack"
+        @player1[@trump].delete("Jack")
+        @player1[@trump] << "Right_Bower"
+      end
+    end
+    @player1[off_jack].each do |card|
+      if card == "Jack"
+        @player1[off_jack].delete("Jack")
+        @player1[@trump] << "Left_Bower"
+      end
+    end
+    @player2[@trump].each do |card|
+      if card == "Jack"
+        @player2[@trump].delete("Jack")
+        @player2[@trump] << "Right_Bower"
+      end
+    end
+    @player2[off_jack].each do |card|
+      if card == "Jack"
+        @player2[off_jack].delete("Jack")
+        @player2[@trump] << "Left_Bower"
+      end
+    end
+    @player3[@trump].each do |card|
+      if card == "Jack"
+        @player3[@trump].delete("Jack")
+        @player3[@trump] << "Right_Bower"
+      end
+    end
+    @player3[off_jack].each do |card|
+      if card == "Jack"
+        @player3[off_jack].delete("Jack")
+        @player3[@trump] << "Left_Bower"
+      end
+    end
+    @player4[@trump].each do |card|
+      if card == "Jack"
+        @player4[@trump].delete("Jack")
+        @player4[@trump] << "Right_Bower"
+      end
+    end
+    @player4[off_jack].each do |card|
+      if card == "Jack"
+        @player4[off_jack].delete("Jack")
+        @player4[@trump] << "Left_Bower"
+      end
+    end
+  end
+
+  def right_bower_converstion
+
+  end
+
+  def left_bower_conversion
+
   end
 
   def player_deal

@@ -155,9 +155,6 @@ class Euchre
           end
         end
       end
-      if played_cards[suit] == nil
-        played_cards[suit] = []
-      end
       played_cards[suit] << value
       played = {}
       played[suit] = value 

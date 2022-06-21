@@ -19,27 +19,36 @@ class Euchre
   end
 
   def full_deal
-    @player1 = player_deal
-    @player2 = player_deal
-    @player3 = player_deal
-    @player4 = player_deal
-    puts "Player #{@dealer_position + 1}, you are dealer."
-    initial_player_order()
-    show_flipped_card()
-    bid()
-    convert_bowers()
-    p @trump
-    p @player1
-    p @player2
-    p @player3
-    p @player4
-    5.times do
-      play_hand()
-      add_to_hands_won()
-      p @hands_won
+    while @score["team1"] < 10 && @score["team2"] < 10
+      @player1 = player_deal
+      @player2 = player_deal
+      @player3 = player_deal
+      @player4 = player_deal
+      puts "Player #{@dealer_position + 1}, you are dealer."
+      initial_player_order()
+      show_flipped_card()
+      bid()
+      convert_bowers()
+      p @trump
+      p @player1
+      p @player2
+      p @player3
+      p @player4
+      5.times do
+        play_hand()
+        add_to_hands_won()
+        p @hands_won
+      end
+      add_to_score()
+      p @score
+      prepare_for_next_hand()
     end
-    add_to_score()
-    p @score
+  end
+
+  def prepare_for_next_hand
+    @dealer_postion += 1
+    @hands_won = {"team1" => 0, "team2" => 0}
+    @flip_card = {}
   end
 
   def play_hand

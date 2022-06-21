@@ -24,29 +24,19 @@ class Euchre
       @player2 = player_deal
       @player3 = player_deal
       @player4 = player_deal
-      p @dealer_position
       initial_player_order()
       puts "#{@text_player_order[3]}, you are dealer."
       show_flipped_card()
       bid()
       convert_bowers()
-      p @trump
-      p 1, @player1
-      p 2, @player2
-      p 3, @player3
-      p 4, @player4
-      p 5, @deck
       5.times do
         play_hand()
         add_to_hands_won()
         puts "***************************************"
         puts "Trick completed. Team 1: #{@hands_won["team1"]}, Team 2: #{@hands_won["team2"]}"
-        p @hands_won
         puts "***************************************"
       end
-      p @score
       add_to_score()
-      p @score
       prepare_for_next_hand()
     end
     if @score["team1"] >= 10
@@ -173,7 +163,6 @@ class Euchre
       played[suit] = value 
       played_cards_order << played
       player[suit].delete(value)
-      p player[suit]
     end
     hand_winner(played_cards_order, led_suit)
   end
@@ -308,8 +297,6 @@ class Euchre
         @text_player_order << player
       end
     end
-    p @player_order
-    p @text_player_order
   end
 
   def bid
@@ -319,26 +306,22 @@ class Euchre
       puts "***************************************"
       if index == 0
         order_it_up = player_bid(index, player)
-        p order_it_up
       elsif index == 1
         order_it_up = player_bid(index, player)
-        p order_it_up
       elsif index == 2
         order_it_up = player_bid(index, player)
-        p order_it_up
       elsif index == 3
         order_it_up = player_bid(index, player)
-        p order_it_up
       end
       if order_it_up == true #dealer picks up @flipped_card, and chooses to discard a card
         @trump = @flip_card.keys[0]
         dealer = @player_order[3]
-        puts "#{@text_player_order[3]}, you have picked up #{@flip_card}. Please choose a card to discard."
+        puts "***************************************"
+        puts "#{@text_player_order[3]}, you have picked up the #{@flip_card.values[0]} of #{@flip_card.keys[0].capitalize}. Please choose a card to discard."
         show_hand(@player_order[3])
         while true
           puts "Choose the suit of the card you would like to discard (spades, clubs, hearts, diamonds)"
           suit = gets.chomp.downcase
-          p suit
           if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
             puts "Please choose a valid suit."
           elsif @player_order[3][suit].length == 0
@@ -374,16 +357,12 @@ class Euchre
         puts "***************************************"
         if index == 0
           trump_called = call_trump(index, player)
-          p trump_called
         elsif index == 1
           trump_called = call_trump(index, player)
-          p trump_called
         elsif index == 2
           trump_called = call_trump(index, player)
-          p trump_called
         elsif index == 3
           trump_called = call_trump(index, player)
-          p trump_called
         end
         if trump_called == true
           break
@@ -399,7 +378,6 @@ class Euchre
         end
       end
     end
-    p @trump
   end
 
   def player_bid(position, player)
@@ -411,7 +389,6 @@ class Euchre
       answer = gets.chomp.downcase
       if answer == "y"
         bidding_team(position)
-        p @bidding_team
         order_it_up = true
         break
       elsif answer == "n"
@@ -434,7 +411,6 @@ class Euchre
       if answer == possible_suits[0] || answer == possible_suits[1] || answer == possible_suits[2]
         @trump = answer
         bidding_team(position)
-        p @bidding_team
         call_trump = true
         break
       elsif answer == "pass"

@@ -11,6 +11,7 @@ class Euchre
     @flip_card = {}
     @dealer_position = 0
     @score = {"team1" => 0, "team2" => 0}
+    @hands_won = {"team1" => 0, "team2" => 0}
     @bidding_team = ""
     @trump = ""
     puts "Welcome to Euchre! Please hit enter to start the game and deal out hands."
@@ -32,10 +33,16 @@ class Euchre
     p @player2
     p @player3
     p @player4
-    play_rounds()
+    5.times do
+      play_hand()
+      add_to_hands_won()
+      p @hands_won
+    end
+    add_to_score()
+    p @score
   end
 
-  def play_rounds
+  def play_hand
     played_cards = {}
     played_cards_order = []
     led_suit = ""
@@ -133,6 +140,8 @@ class Euchre
       played = {}
       played[suit] = value 
       played_cards_order << played
+      player[suit].delete(value)
+      p player[suit]
     end
     hand_winner(played_cards_order, led_suit)
   end
@@ -145,11 +154,10 @@ class Euchre
       else
         cards[index] = nil
       end
-      p cards
     end
     if cards != [nil, nil, nil, nil]
       trump = true
-      winner(cards, played_cards_order)
+      winner(cards, trump, led_suit)
     else
       trump = false
       cards = []
@@ -159,13 +167,12 @@ class Euchre
         else
           cards[index] = nil
         end
-        p cards
       end
-      winner(cards, played_cards_order, trump, led_suit)
+      winner(cards, trump, led_suit)
     end
   end
 
-  def winner(cards, played_cards_order, trump, led_suit)
+  def winner(cards, trump, led_suit)
     if trump == true
       suit = @trump
     else
@@ -196,6 +203,30 @@ class Euchre
     subsequent_player_order(winner_index)
   end
 
+  def add_to_hands_won
+    if @text_player_order[0] == "Player 1" || @text_player_order[0] == "Player 3"
+      @hands_won["team1"] += 1
+    else
+      @hands_won["team2"] += 1
+    end
+  end
+
+  def add_to_score
+    if @bidding_team == "team1" && @hands_won["team1"] == 5
+      @score["team1"] += 2
+    elsif @bidding_team == "team1" && @hands_won["team1"] > 3
+      @score["team1"] += 2
+    elsif @bidding_team == "team1" 
+      @score["team2"] += 2
+    elsif @bidding_team == "team2" && @hands_won["team2"] == 5
+      @score["team1"] += 2
+    elsif @bidding_team == "team2" && @hands_won["team2"] > 3
+      @score["team1"] += 2
+    elsif @bidding_team == "team2" 
+      @score["team1"] += 2
+    end
+  end
+
   def initial_player_order
     if @dealer_position == 0
       @player_order = [@player2, @player3, @player4, @player1]
@@ -214,11 +245,11 @@ class Euchre
 
   def subsequent_player_order(winner_index)
     if winner_index == 1
-      shift = @player_order.shift
+      shift = @player_order.shift(1)
       shift.each do |player|
         @player_order << player
       end
-      shift = @text_player_order.shift
+      shift = @text_player_order.shift(1)
       shift.each do |player|
         @text_player_order << player
       end

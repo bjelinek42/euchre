@@ -26,7 +26,7 @@ class Euchre
       @player4 = player_deal
       p @dealer_position
       initial_player_order()
-      puts "Player #{@text_player_order[3]}, you are dealer."
+      puts "#{@text_player_order[3]}, you are dealer."
       show_flipped_card()
       bid()
       convert_bowers()
@@ -297,32 +297,29 @@ class Euchre
   end
 
   def bid
-    position = @dealer_position + 2 #hold position for rounds without changing dealer position
+    # position = @dealer_position + 2 #hold position for rounds without changing dealer position
     puts "The flipped card is: #{@flip_card}"
-    count = 0
-    while count < 4
-      if position == 1
-        player = @player1
-        order_it_up = player_bid(position, player)
-      elsif position == 2
-        player = @player2
-        order_it_up = player_bid(position, player)
-      elsif position == 3
-        player = @player3
-        order_it_up = player_bid(position, player)
-      elsif position == 4
-        player = @player4
-        order_it_up = player_bid(position, player)
-      end
-      position += 1
-      if position == 5
-        position = 1
+    # count = 0
+    order_it_up = false
+    @player_order.each_with_index do |player, index|
+      if index == 0
+        order_it_up = player_bid(index, player)
+        p order_it_up
+      elsif index == 1
+        order_it_up = player_bid(index, player)
+        p order_it_up
+      elsif index == 2
+        order_it_up = player_bid(index, player)
+        p order_it_up
+      elsif index == 3
+        order_it_up = player_bid(index, player)
+        p order_it_up
       end
       if order_it_up == true #dealer picks up @flipped_card, and chooses to discard a card
         players = [@player1, @player2, @player3, @player4]
         @trump = @flip_card.keys[0]
-        dealer = players[@dealer_position]
-        puts "Player #{@dealer_position + 1}, you have picked up #{@flip_card}. Please choose a card to discard."
+        dealer = @player_order[3]
+        puts "#{@text_player_order[3]}, you have picked up #{@flip_card}. Please choose a card to discard."
         puts "Your Hand: Spades: #{dealer["spades"]}, Clubs: #{dealer["clubs"]}, Hearts: #{dealer["hearts"]}, Diamonds: #{dealer["diamonds"]}"
         while true
           puts "Choose the suit of the card you would like to discard (spades, clubs, hearts, diamonds)"
@@ -330,9 +327,9 @@ class Euchre
           p suit
           if suit != "spades" && suit != "clubs" && suit != "hearts" && suit != "diamonds"
             puts "Please choose a valid suit."
-          elsif players[@dealer_position][suit].length == 0
+          elsif @player_order[3][suit].length == 0
             puts "You have no #{suit} to discard. Please enter a different response."
-          elsif players[@dealer_position][suit].length > 0
+          elsif @player_order[3][suit].length > 0
             break
           end
         end
@@ -341,7 +338,7 @@ class Euchre
           puts "Type the value of the card you wish to discard."
           value = gets.chomp.to_s.downcase.capitalize
           exist = false
-          players[@dealer_position][suit].each do |card|
+          @player_order[3][suit].each do |card|
             if card == value
               exist = true
             end
@@ -352,45 +349,39 @@ class Euchre
             break
           end
         end
-        players[@dealer_position][suit].delete(value)
-        players[@dealer_position][@trump] << @flip_card[@trump]
+        @player_order[3][suit].delete(value)
+        @player_order[3][@trump] << @flip_card[@trump]
         break
       end
-      count += 1
+      # count += 1
     end
     if order_it_up == false
-      count = 0
       trump_called = false
-      while count < 4
-        if position == 1
-          player = @player1
-          trump_called = call_trump(position, player)
-        elsif position == 2
-          player = @player2
-          trump_called = call_trump(position, player)
-        elsif position == 3
-          player = @player3
-          trump_called = call_trump(position, player)
-        elsif position == 4
-          player = @player4
-          trump_called = call_trump(position, player)
+      @player_order.each_with_index do |player, index|
+        if index == 0
+          trump_called = call_trump(index, player)
+          p trump_called
+        elsif index == 1
+          trump_called = call_trump(index, player)
+          p trump_called
+        elsif index == 2
+          trump_called = call_trump(index, player)
+          p trump_called
+        elsif index == 3
+          trump_called = call_trump(index, player)
+          p trump_called
         end
         if trump_called == true
           break
         end
-        count += 1
-        if count == 4 && trump_called == false
+        if index == 3 && trump_called == false
           while true
-            puts "Sorry, Player #{position}, you are last and must call trump!"
-            trump_called = call_trump(position, player)
+            puts "Sorry, #{@text_player_order[index]}, you are dealer and must call trump!"
+            trump_called = call_trump(index, player)
             if trump_called == true
               break
             end
           end
-        end
-        position += 1
-        if position == 5
-          position = 1
         end
       end
     end
@@ -398,14 +389,14 @@ class Euchre
   end
 
   def player_bid(position, player)
-    puts "Player #{position}, it is your turn."
+    puts "#{@text_player_order[position]}, it is your turn."
     puts "Your Hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
     order_it_up = false
     while true
-      puts "Would you like to Order it up? y or n"
+      puts "Would you like to Order it up? Y or N"
       answer = gets.chomp.downcase
       if answer == "y"
-        if position == 1 || position == 3
+        if @text_player_order[position] == "Player 1" || @text_player_order[position] == "Player 3"
           @bidding_team = "team1"
         else
           @bidding_team = "team2"
@@ -416,7 +407,7 @@ class Euchre
       elsif answer == "n"
         break
       else
-        puts "please enter a valid response"
+        puts "Please enter a valid response"
       end
     end
     return order_it_up
@@ -428,10 +419,16 @@ class Euchre
     possible_suits = ["spades", "clubs", "hearts", "diamonds"]
     possible_suits.delete(@flip_card.keys[0])
     while true
-      puts "Player #{position}, would you like to call trump? Please select #{possible_suits[0]}, #{possible_suits[1]}, #{possible_suits[2]}, or pass."
+      puts "#{@text_player_order[position]}, would you like to call trump? Please select #{possible_suits[0]}, #{possible_suits[1]}, #{possible_suits[2]}, or pass."
       answer = gets.chomp.downcase
       if answer == possible_suits[0] || answer == possible_suits[1] || answer == possible_suits[2]
         @trump = answer
+        if @text_player_order[position] == "Player 1" || @text_player_order[position] == "Player 3"
+          @bidding_team = "team1"
+        else
+          @bidding_team = "team2"
+        end
+        p @bidding_team
         call_trump = true
         break
       elsif answer == "pass"

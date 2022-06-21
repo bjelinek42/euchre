@@ -25,8 +25,8 @@ class Euchre
       @player3 = player_deal
       @player4 = player_deal
       p @dealer_position
-      puts "Player #{@dealer_position + 1}, you are dealer."
       initial_player_order()
+      puts "Player #{@text_player_order[3]}, you are dealer."
       show_flipped_card()
       bid()
       convert_bowers()
@@ -54,6 +54,9 @@ class Euchre
     puts "Press enter to deal next hand."
     gets
     @dealer_position += 1
+    if @dealer_position > 3 #cycle through indexes of player order, not to exceed the 4th position
+      @dealer_position = 0
+    end
     @hands_won = {"team1" => 0, "team2" => 0}
     @flip_card = {}
     @deck = {"spades" => ["Ace", "King", "Queen", "Jack", "10", "9"], "clubs" => ["Ace", "King", "Queen", "Jack", "10", "9"], "hearts" => ["Ace", "King", "Queen", "Jack", "10", "9"], "diamonds" => ["Ace", "King", "Queen", "Jack", "10", "9"]}
@@ -294,9 +297,6 @@ class Euchre
   end
 
   def bid
-    if @dealer_position > 3 #cycle through indexes of player order, not to exceed the 4th position
-      @dealer_position = 0
-    end
     position = @dealer_position + 2 #hold position for rounds without changing dealer position
     puts "The flipped card is: #{@flip_card}"
     count = 0

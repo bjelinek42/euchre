@@ -24,21 +24,24 @@ class Euchre
       @player2 = player_deal
       @player3 = player_deal
       @player4 = player_deal
+      p @dealer_position
       puts "Player #{@dealer_position + 1}, you are dealer."
       initial_player_order()
       show_flipped_card()
       bid()
       convert_bowers()
       p @trump
-      p @player1
-      p @player2
-      p @player3
-      p @player4
+      p 1, @player1
+      p 2, @player2
+      p 3, @player3
+      p 4, @player4
+      p 5, @deck
       5.times do
         play_hand()
         add_to_hands_won()
         p @hands_won
       end
+      p @score
       add_to_score()
       p @score
       prepare_for_next_hand()
@@ -46,9 +49,14 @@ class Euchre
   end
 
   def prepare_for_next_hand
-    @dealer_postion += 1
+    puts "End of hand! The bidding team last round was #{@bidding_team}, and they took #{@hands_won[@bidding_team]} tricks. The score is currently:"
+    puts "Team 1: #{@score["team1"]}, Team 2: #{@score["team2"]}."
+    puts "Press enter to deal next hand."
+    gets
+    @dealer_position += 1
     @hands_won = {"team1" => 0, "team2" => 0}
     @flip_card = {}
+    @deck = {"spades" => ["Ace", "King", "Queen", "Jack", "10", "9"], "clubs" => ["Ace", "King", "Queen", "Jack", "10", "9"], "hearts" => ["Ace", "King", "Queen", "Jack", "10", "9"], "diamonds" => ["Ace", "King", "Queen", "Jack", "10", "9"]}
   end
 
   def play_hand
@@ -110,7 +118,7 @@ class Euchre
             end
           end
         else
-          puts "#{@text_player_order[index]}, you do not have the led suit. You can play any other card"
+          puts "#{@text_player_order[index]}, you do not have the led suit. You can play any other card."
           puts "Your hand: Spades: #{player["spades"]}, Clubs: #{player["clubs"]}, Hearts: #{player["hearts"]}, Diamonds: #{player["diamonds"]}"
           while true
             puts "#{@text_player_order[index]}, Choose the suit of the card you would like to play (spades, clubs, hearts, diamonds)"
@@ -223,14 +231,14 @@ class Euchre
   def add_to_score
     if @bidding_team == "team1" && @hands_won["team1"] == 5
       @score["team1"] += 2
-    elsif @bidding_team == "team1" && @hands_won["team1"] > 3
-      @score["team1"] += 2
+    elsif @bidding_team == "team1" && @hands_won["team1"] >= 3
+      @score["team1"] += 1
     elsif @bidding_team == "team1" 
       @score["team2"] += 2
     elsif @bidding_team == "team2" && @hands_won["team2"] == 5
-      @score["team1"] += 2
-    elsif @bidding_team == "team2" && @hands_won["team2"] > 3
-      @score["team1"] += 2
+      @score["team2"] += 2
+    elsif @bidding_team == "team2" && @hands_won["team2"] >= 3
+      @score["team2"] += 1
     elsif @bidding_team == "team2" 
       @score["team1"] += 2
     end
@@ -402,6 +410,7 @@ class Euchre
         else
           @bidding_team = "team2"
         end
+        p @bidding_team
         order_it_up = true
         break
       elsif answer == "n"

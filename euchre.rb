@@ -63,7 +63,7 @@ class Euchre
   end
 
   def play_hand #follow player order to play hand
-    played_cards = {}
+    played_cards = {"spades" => [], "clubs" => [], "hearts" => [], "diamonds" => []}
     played_cards_order = []
     led_suit = ""
     @player_order.each_with_index do |player, index|
@@ -101,7 +101,7 @@ class Euchre
         end
         led_suit = suit
       else #other players must follow suit chosen
-        puts "Currently played cards: #{played_cards}."
+        currently_played_cards(played_cards)
         puts "Trump is #{@trump.capitalize}"
         puts "Led suit is #{led_suit.capitalize}"
         if player[led_suit] != [] #if they have led suit, must follow suit
@@ -165,6 +165,10 @@ class Euchre
       player[suit].delete(value)
     end
     hand_winner(played_cards_order, led_suit)
+  end
+
+  def currently_played_cards(played_cards)
+    puts "Current played cards: Spades: #{played_cards["spades"]}, Clubs: #{played_cards["clubs"]}, Hearts: #{played_cards["hearts"]}, Diamonds: #{played_cards["diamonds"]}"
   end
 
   def show_hand(player)

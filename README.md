@@ -11,5 +11,4 @@ If you are having trouble entering a suit/value to play, make sure you are typin
 Future editions will have:
 -ability to go alone for a hand
 -will show who is currently winning each trick
--change currently played cards display
 -AI players!
